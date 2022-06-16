@@ -19,20 +19,20 @@ else
 fi
 echo "Guess the secret number between 1 and 1000:"
 read GUESS
-GUESS_NUMBER(GUESS)
-GUESS_NUMBER{
+GUESS_NUMBER GUESS
+GUESS_NUMBER() {
 if [[ $1 -gt RANDOM_NUMBER ]]
 then
   echo "It's higher than that guess again:"
   $GUESS_COUNT = $GUESS_COUNT + 1
   read GUESS
-  GUESS_NUMBER(GUESS)
+  GUESS_NUMBER GUESS
 elif [[ $1 -lt $RANDOM_NUMBER ]]
 then
   echo "It's lower than that guess again:"
   $GUESS_COUNT = $GUESS_COUNT + 1
   read GUESS
-  GUESS_NUMBER(GUESS)
+  GUESS_NUMBER GUESS
 elif [[ $1 == $RANDOM_NUMBER ]]
 then
   echo "You guessed it in $GUESS_NUMBER tries. The secret number was $RANDOM_NUMBER. Nice job!"
