@@ -11,10 +11,11 @@ then
   USER_INSERTED=$($PSQL "INSERT INTO user_info(name) VALUES('$USER_NAME')")
   GAMES_PLAYED=0
   BEST_GAME=5000
+  USER_ID=$($PSQL "SELECT user_id FROM user_info WHERE name = '$USER_NAME'")
 else
   GAMES_PLAYED=$($PSQL "SELECT games_played FROM user_info WHERE user_id = '$USER_ID'")
   BEST_GAME=$($PSQL "SELECT best_guess FROM user_info WHERE user_id = '$USER_ID'")
-
+  echo "Welcome back, $USER_NAME! You have played $GAMES_PLAYED, and your best game took $BEST_GAME guesses."
 fi
 echo "Guess the secret number between 1 and 1000:"
 read GUESS
@@ -27,14 +28,20 @@ then
   read GUESS
   GUESS_NUMBER(GUESS)
 elif [[ $1 -lt $RANDOM_NUMBER ]]
+then
   echo "It's lower than that guess again:"
   $GUESS_COUNT = $GUESS_COUNT + 1
   read GUESS
   GUESS_NUMBER(GUESS)
 elif [[ $1 == $RANDOM_NUMBER ]]
-  echo "You gessed it in $GUESS_NUMBER tries. The secret number was $RANDOM_NUMBER. Nice job!"
-  # get lowest number of guesses
-  # if current guess_number is lower then replace
-  INFO_INSERTED=$($PSQL "INSERT INTO
+then
+  echo "You guessed it in $GUESS_NUMBER tries. The secret number was $RANDOM_NUMBER. Nice job!"
+  # set variables
+  if [[ $GUESS_NUMBER -lt $BEST_GAME ]]
+  then
+      BEST_GAME_UPDATED=$($PSQL "UPDATE user_info SET best_guess = $GUESS_NUMBER WHERE user_id = $USER_ID")
+  fi
+  NEW_GAMES_PLAYED=GAMES_PLAYED+1
+  GAMES_PLAYED_UPDATED=$($PSQL "UPDATE user_info SET games_played = '$NEW_GAMES_PLAYED'")
 }
 
